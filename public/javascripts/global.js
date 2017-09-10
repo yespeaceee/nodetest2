@@ -13,6 +13,9 @@ $(document).ready(function(){
     // Add user button click
     $('#btnAddUser').on('click', addUser);
 	
+    // Delete user link click
+    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+  
 });
 
 // === Functions ===
@@ -120,3 +123,42 @@ function addUser(event) {
   }
   
 };
+
+//  Delete user
+function deleteUser(event) {
+  
+    event.preventDefault();
+  
+    // Pop up a confirmation dialog
+    var confirmation = confirm('Are you sure you want to delete this user?');
+  
+    // Check and make sure the user confirmed
+    if (confirmation === true) {
+      
+        // if so, do delete
+        $.ajax({
+            type: 'DELETE',
+            url: '/users/deleteuser/' + $(this).attr('rel')
+        }).done(function( response ) {
+            
+            // Check for a successful (blank) message
+            if (response.msg === '') {
+            }
+            else {
+                alert('Error: ' + response.msg);
+            }
+          
+            // Update table
+            populateTable();
+        });
+    }
+    else {
+        
+        // If they said no to the confirm, do nothing
+        return false;
+      
+    }
+    
+};
+
+
